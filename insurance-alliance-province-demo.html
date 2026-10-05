@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insurance Alliance | Province Selection Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f2a4a; --blue:#1f5fa8; --sky:#e8f0f9; --ink:#1b2735; --muted:#5b6878;
+  --line:#dbe3ec; --bg:#fbfcfe; --white:#fff;
+  --serif:"Source Serif 4",Georgia,serif; --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.55}
+a{color:inherit}
+:focus-visible{outline:3px solid #7fb2ee;outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* Header */
+header{background:var(--white);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;flex-wrap:wrap}
+.logo{font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.14em;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:7px;background:var(--navy);display:grid;place-items:center}
+.logo i::after{content:"";width:12px;height:12px;border:3px solid #fff;border-radius:50%;border-right-color:transparent;transform:rotate(-30deg)}
+.picker{display:flex;align-items:center;gap:10px}
+.picker label{font-size:14px;color:var(--muted)}
+.picker select{font:500 15px var(--sans);color:var(--navy);padding:9px 36px 9px 12px;border:1.5px solid var(--navy);border-radius:8px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230f2a4a' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 12px center;appearance:none;cursor:pointer}
+nav{display:flex;gap:26px;padding-bottom:12px;font-size:15px;overflow-x:auto}
+nav a{text-decoration:none;color:var(--muted);padding:4px 0;border-bottom:2px solid transparent;white-space:nowrap}
+nav a:hover,nav a[aria-current]{color:var(--navy);border-color:var(--blue)}
+
+/* Detection notice */
+.notice{background:var(--sky);border-bottom:1px solid #cfdef0;font-size:14px;color:var(--navy)}
+.notice .wrap{display:flex;align-items:center;gap:10px;padding-top:9px;padding-bottom:9px;min-height:40px}
+.notice svg{flex:none}
+.notice.warn{background:#fff6e0;border-color:#f0dca8}
+
+/* Hero */
+.hero{background:linear-gradient(180deg,var(--white),var(--sky));padding:64px 0 56px;border-bottom:1px solid var(--line)}
+.hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:center}
+.chip{display:inline-block;font-size:13px;font-weight:600;color:var(--blue);background:#fff;border:1px solid #cfdef0;border-radius:999px;padding:4px 12px;margin-bottom:16px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.6vw,46px);line-height:1.12;color:var(--navy);margin:0 0 14px;max-width:16ch}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:46ch;margin:0}
+.card-contact{background:var(--navy);color:#fff;border-radius:14px;padding:28px}
+.card-contact .biz{font-family:var(--serif);font-size:24px;font-weight:600;margin:0 0 4px}
+.card-contact .sub{font-size:14px;color:#b9cbe2;margin:0 0 20px}
+.phone{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:var(--navy);font-weight:600;font-size:20px;text-decoration:none;border-radius:10px;padding:14px 18px}
+.phone:hover{background:var(--sky)}
+.card-contact small{display:block;margin-top:12px;font-size:13px;color:#b9cbe2;text-align:center}
+
+/* Services */
+section.services{padding:56px 0 64px}
+h2{font-family:var(--serif);font-weight:600;font-size:28px;color:var(--navy);margin:0 0 6px}
+.services .intro{color:var(--muted);margin:0 0 28px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.svc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px}
+.svc .ic{width:44px;height:44px;border-radius:10px;background:var(--sky);color:var(--blue);display:grid;place-items:center;margin-bottom:16px}
+.svc h3{margin:0 0 6px;font-size:18px;color:var(--navy)}
+.svc p{margin:0 0 14px;color:var(--muted);font-size:15px}
+.svc a{font-weight:600;font-size:15px;color:var(--blue);text-decoration:none}
+.svc a:hover{text-decoration:underline}
+.swap{transition:opacity .22s ease}
+.swap.out{opacity:0}
+
+footer{background:var(--navy);color:#b9cbe2;font-size:14px;padding:28px 0 110px}
+footer strong{color:#fff}
+
+/* Demo panel: visually separate from the site */
+#demo{position:fixed;left:16px;bottom:16px;z-index:20;width:268px;background:#14171c;color:#e6e9ee;border:1px dashed #6b7686;border-radius:10px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+#demo summary{cursor:pointer;padding:10px 14px;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+#demo summary::-webkit-details-marker{display:none}
+#demo .body{padding:0 14px 14px}
+#demo p{margin:0 0 10px;color:#9aa4b2;font-size:12px}
+#demo select{width:100%;font:14px var(--sans);padding:8px;border-radius:6px;border:1px solid #4a5361;background:#1f242c;color:#fff}
+#demo .status{margin-top:10px;font-size:12px;color:#9aa4b2;word-break:break-word}
+#demo .status b{color:#8fd0a4;font-weight:600}
+
+@media (max-width:760px){
+  .hero{padding:40px 0}
+  .hero-grid{grid-template-columns:1fr}
+  .picker{width:100%}.picker select{flex:1}
+  #demo{left:8px;right:8px;width:auto;bottom:8px}
+}
+@media (prefers-reduced-motion:reduce){.swap{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="logo" href="#" aria-label="Insurance Alliance home"><i></i>INSURANCE ALLIANCE</a>
+      <div class="picker">
+        <label for="province">Province</label>
+        <select id="province" aria-describedby="notice-text">
+          <option value="AB">Alberta</option>
+          <option value="ON">Ontario</option>
+          <option value="BC">British Columbia</option>
+        </select>
+      </div>
+    </div>
+    <nav aria-label="Main">
+      <a href="#" aria-current="page">Home</a><a href="#services">Insurance</a><a href="#">Claims</a><a href="#">About us</a><a href="#">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Subtle location-detection notification -->
+<div class="notice" id="notice" role="status" aria-live="polite">
+  <div class="wrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+    <span id="notice-text">Checking your location…</span>
+  </div>
+</div>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="chip" id="province-chip">Serving Alberta</span>
+        <h1>Coverage for what you've built.</h1>
+        <p class="lead">Talk to a licensed advisor in your province. We'll help you find the right protection and a fair price.</p>
+      </div>
+      <!-- Province-specific business name + phone number -->
+      <div class="card-contact swap" id="contact">
+        <p class="biz" id="biz-name"></p>
+        <p class="sub" id="biz-province"></p>
+        <a class="phone" id="phone" href="#">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
+          <span id="phone-text"></span>
+        </a>
+        <small>Call to speak with an advisor</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="services" id="services">
+    <div class="wrap">
+      <h2>Insurance available in <span id="svc-province"></span></h2>
+      <p class="intro">Choose a coverage type to get started.</p>
+      <div class="cards swap" id="cards"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><strong id="foot-name"></strong> &nbsp;|&nbsp; <span id="foot-phone"></span><br>
+  Prototype for demonstration purposes only.</div>
+</footer>
+
+<!-- DEMO PANEL (not part of the proposed website) -->
+<details id="demo" open>
+  <summary>Demo controls <span aria-hidden="true">▾</span></summary>
+  <div class="body">
+    <p>For client review only. Simulates where a visitor is located.</p>
+    <label for="demo-loc" style="display:block;margin-bottom:6px">Demo Location</label>
+    <select id="demo-loc">
+      <option value="AUTO">Automatic Detection</option>
+      <option value="AB">Alberta</option>
+      <option value="ON">Ontario</option>
+      <option value="BC">British Columbia</option>
+    </select>
+    <div class="status" id="demo-status">Waiting…</div>
+  </div>
+</details>
+
+<script>
+/* ---------------------------------------------------------------
+   PROVINCE DATA
+   Single source of truth. Services are listed per province, so BC
+   simply has no "auto" entry and can never render one.
+---------------------------------------------------------------- */
+const SERVICES = {
+  auto:       {name:"Auto Insurance",          desc:"Protection for your vehicle, your passengers and other drivers.",  icon:'<path d="M5 16l1.5-5.5A2 2 0 018.4 9h7.2a2 2 0 011.9 1.5L19 16M3 16h18v3h-2v-1H5v1H3zM7 13h.01M17 13h.01"/>'},
+  home:       {name:"Home / Property Insurance",desc:"Cover for your home, belongings and rental or investment property.", icon:'<path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/>'},
+  commercial: {name:"Commercial Insurance",    desc:"Coverage built around your business, your people and your assets.", icon:'<path d="M4 21V8l8-5 8 5v13M9 21v-6h6v6M8 11h.01M12 11h.01M16 11h.01"/>'}
+};
+const PROVINCES = {
+  AB:{label:"Alberta",          biz:"Alliance Insurance Associates", phone:"780 490 0053",    tel:"+17804900053", services:["auto","home","commercial"]},
+  ON:{label:"Ontario",          biz:"Alliance Insurance Associates", phone:"1.877.974.7497",  tel:"+18779747497", services:["auto","home","commercial"]},
+  BC:{label:"British Columbia", biz:"Alliance Associates",           phone:"236-993-0063",    tel:"+12369930063", services:["home","commercial"]}
+};
+const DEFAULT_PROVINCE = "AB";
+
+const $ = id => document.getElementById(id);
+const select = $("province"), notice = $("notice"), noticeText = $("notice-text");
+
+/* ---------------------------------------------------------------
+   RENDER: updates business name, phone, services and province
+   labels. Called for both detection and manual changes.
+---------------------------------------------------------------- */
+function render(code, animate = true){
+  const p = PROVINCES[code];
+  const apply = () => {
+    $("biz-name").textContent = p.biz;
+    $("biz-province").textContent = p.label;
+    $("phone-text").textContent = p.phone;
+    $("phone").href = "tel:" + p.tel;
+    $("province-chip").textContent = "Serving " + p.label;
+    $("svc-province").textContent = p.label;
+    $("foot-name").textContent = p.biz;
+    $("foot-phone").textContent = p.phone;
+    $("cards").innerHTML = p.services.map(k => {
+      const s = SERVICES[k];
+      return `<article class="svc"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg></div>
+        <h3>${s.name}</h3><p>${s.desc}</p><a href="#">Get a quote</a></article>`;
+    }).join("");
+  };
+  if(!animate){ apply(); return; }
+  // brief fade so the visitor sees what changed
+  const els = [$("contact"), $("cards")];
+  els.forEach(e => e.classList.add("out"));
+  setTimeout(() => { apply(); els.forEach(e => e.classList.remove("out")); }, 180);
+}
+
+function showNotice(msg, warn){
+  noticeText.textContent = msg;
+  notice.classList.toggle("warn", !!warn);
+}
+
+/* ---------------------------------------------------------------
+   GEOIP LOOKUP
+   Real API call to ipapi.co (free tier, no key, HTTPS).
+   Returns the province code (AB/ON/BC) or null if the visitor is
+   outside our three provinces or the API fails.
+---------------------------------------------------------------- */
+async function detectProvince(){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 5000);   // don't wait forever
+  try{
+    const res = await fetch("https://ipapi.co/json/", {signal: ctrl.signal});   // <-- GeoIP API call
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if(data.error) throw new Error(data.reason || "API error");
+
+    // HOW THE PROVINCE IS DETERMINED:
+    // ipapi.co returns country_code ("CA") and region_code ("AB", "ON", "BC").
+    // We only accept it if the visitor is in Canada AND in a province we serve.
+    if(data.country_code === "CA" && PROVINCES[data.region_code]){
+      return {code: data.region_code, raw: `${data.city || "?"}, ${data.region_code}, ${data.country_code}`};
+    }
+    return {code: null, raw: `${data.city || "?"}, ${data.region_code || "?"}, ${data.country_code || "?"}`};
+  }catch(err){
+    return {code: null, raw: "lookup failed (" + err.message + ")"};
+  }finally{
+    clearTimeout(timer);
+  }
+}
+
+/* ---------------------------------------------------------------
+   INITIAL SELECTION
+   Runs on page load and whenever "Demo Location" changes.
+   Detection ONLY sets the starting value of the dropdown. It never
+   redirects, changes the URL, hides provinces or locks the control.
+---------------------------------------------------------------- */
+async function initProvince(){
+  const mode = $("demo-loc").value;
+  let code = null, source = "", raw = "";
+
+  if(mode === "AUTO"){
+    showNotice("Checking your location…");
+    const r = await detectProvince();            // real GeoIP lookup
+    code = r.code; raw = r.raw; source = "GeoIP (ipapi.co)";
+  }else{
+    code = mode; source = "simulated"; raw = PROVINCES[mode].label;   // demo override
+  }
+
+  if(code){
+    select.value = code;                          // <-- AUTO-SELECTS the dropdown
+    render(code);
+    showNotice("We detected your location as " + PROVINCES[code].label + ".");
+  }else{
+    select.value = DEFAULT_PROVINCE;              // fallback: Alberta
+    render(DEFAULT_PROVINCE);
+    showNotice("Please select your province.", true);
+  }
+  $("demo-status").innerHTML = `Source: ${source}<br>Result: <b>${raw}</b><br>Selected: <b>${PROVINCES[select.value].label}</b>`;
+}
+
+/* ---------------------------------------------------------------
+   MANUAL SELECTION ALWAYS WINS
+   The visitor's choice is applied immediately and replaces the
+   detected value. Detection is not re-run afterwards.
+---------------------------------------------------------------- */
+select.addEventListener("change", () => {
+  render(select.value);
+  showNotice("Showing " + PROVINCES[select.value].label + ". You can change your province at any time.");
+  $("demo-status").innerHTML += "<br>Visitor changed province manually.";
+});
+
+// Demo panel: re-run a "fresh visit" with the chosen simulated location.
+$("demo-loc").addEventListener("change", initProvince);
+
+render(DEFAULT_PROVINCE, false);
+initProvince();
+</script>
+</body>
+</html>
